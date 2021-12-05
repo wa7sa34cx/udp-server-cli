@@ -2,7 +2,7 @@
 name = "udp-server-cli"
 description = "Testing UDP written in Rust"
 version = "0.1.0"
-edition = "2018"
+edition = "2021"
 authors = ["Alex Black <wa7@sa34.cx>"]
 license = "MIT"
 repository = "https://github.com/wa7sa34cx/udp-server-cli"
@@ -21,10 +21,11 @@ anyhow = "1.0"
 bytes = "1"
 tokio = { version = "1.14", features = ["full", "tracing"] }
 tokio-util = { version = "0.6", features = ["full"] }
-tokio-stream = { version = "0.1" }
+# tokio-stream = { version = "0.1" }
 tracing = "0.1"
 log = "0.4"
 pretty_env_logger = "0.4"
 dotenv = "0.15"
 sqlx = { version = "0.5", features = [ "sqlite", "runtime-tokio-rustls", "migrate" ] }
 sql-builder = "3.1"
+thiserror = "1.0"

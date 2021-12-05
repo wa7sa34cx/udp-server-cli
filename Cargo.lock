@@ -1002,8 +1002,8 @@ dependencies = [
  "pretty_env_logger",
  "sql-builder",
  "sqlx",
+ "thiserror",
  "tokio",
- "tokio-stream",
  "tokio-util",
  "tracing",
 ]
