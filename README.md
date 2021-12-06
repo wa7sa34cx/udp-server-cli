@@ -30,30 +30,39 @@ The default port for listening is `8080`. You can specify another IP and port fo
 
 `cargo run -- 127.0.0.1:8888`
 
-After starting the server, open a new terminal window. With the help of the Netcat utility, we can send UDP packets to the server. Netcat (nc) command is installed by default in Linux OS. To connect to server using nc command use below command in system terminal:
+After starting the server, open a new terminal window. With the help of the Netcat utility, you can send UDP packets to the server. Netcat (nc) command is installed by default in Linux OS. To connect to server using nc command use below command in system terminal:
 
 `nc -u 127.0.0.1 8080`
 
 Now we can send UDP packet to the server. Here is some examples:
 
-````1
-one```
+```
+1
+one
+```
 
-```2
-two```
+```
+2
+two
+```
 
-``3
-three``
+```
+3
+three
+```
 
-```42
-Database error: no rows returned by a query that expected to return at least one row```
+```
+42
+Database error: no rows returned by a query that expected to return at least one row
+```
 
-``qwerty
-Request error: invalid digit found in string```
+```
+qwerty
+Request error: invalid digit found in string
+```
 
 Note. We have ...
 
 ## License
 
 This project is licensed under the [MIT license](LICENSE).
-````
