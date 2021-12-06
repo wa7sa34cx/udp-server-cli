@@ -1,6 +1,6 @@
 [package]
 name = "udp-server-cli"
-description = "Testing UDP server written in Rust"
+description = "Simple UDP server written in Rust"
 version = "0.1.0"
 edition = "2021"
 authors = ["Alex Black <wa7@sa34.cx>"]
