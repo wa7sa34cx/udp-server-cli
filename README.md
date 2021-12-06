@@ -1,6 +1,6 @@
 # UDP-Server-CLI
 
-Simple UDP server written in Rust. It receives requests, processes them and sends a response.
+Simple UDP server written in Rust. It receives requests, processes them and sends a responses.
 
 ## Installation
 
@@ -22,7 +22,7 @@ Simple UDP server written in Rust. It receives requests, processes them and send
 
 ## Usage
 
-First of all, start server with command:
+First of all, start the server with the command:
 
 `cargo run`
 
@@ -34,7 +34,7 @@ After starting the server, open a new terminal window. With the help of the Netc
 
 `nc -u 127.0.0.1 8080`
 
-Now we can send UDP packet to the server. Here is some examples:
+Now we can send UDP packet to the server. Here is some requests and responses:
 
 ```
 1
@@ -61,7 +61,17 @@ qwerty
 Request error: invalid digit found in string
 ```
 
-Note. We have ...
+### Why did we get these results?
+
+This server accepts the command, validates it and sends a response. If package is a number, it tries to find the text for this ID in the database. The database consists of one table. It has 3 lines by default:
+
+| id  | text  |
+| --- | ----- |
+| 1   | one   |
+| 2   | two   |
+| 3   | three |
+
+The server also responds with an error if it receives a non-number or no record is found for this number in the database.
 
 ## License
 
