@@ -16,6 +16,7 @@ pub struct Item {
 /// let item = Item::new("hello");
 /// ```
 impl Item {
+    #[allow(unused)]
     pub fn new<S>(text: S) -> Self
     where
         S: Into<String>,
@@ -36,7 +37,7 @@ mod tests {
         let actual = Item::new("hello");
         let expected = Item {
             id: 0,
-            name: "hello".to_owned(),
+            text: "hello".to_owned(),
         };
 
         assert_eq!(actual, expected);
