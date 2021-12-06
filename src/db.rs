@@ -1,7 +1,9 @@
 //! Database module
 //!
 //! This module is used to work with the SQLite database
-//! in asynchronous mode relying on crate [`sqlx`](https://docs.rs/sqlx/).
+//! in asynchronous mode relying on crate [`sqlx`].
+//! 
+//! [`sqlx`]: https://docs.rs/sqlx/
 
 pub mod models;
 
@@ -19,7 +21,7 @@ pub struct Db {
 }
 
 impl Db {
-    /// Initialize database from str
+    /// Initializes database from str
     #[allow(unused)]
     pub async fn new(database_url: &str) -> Self {
         let pool = Pool::connect(database_url).await.unwrap();
@@ -27,14 +29,14 @@ impl Db {
         Self { pool }
     }
 
-    /// Initialize database from env
+    /// Initializes database from env
     pub async fn from_env() -> Self {
         let pool = Pool::connect(&get_env("DATABASE_URL")).await.unwrap();
 
         Self { pool }
     }
 
-    /// Get item by id
+    /// Gets item by id
     pub async fn get_by_id(&self, id: i64) -> Result<Item> {
         let sql = SqlBuilder::select_from("items")
             .and_where_eq("id", id)
