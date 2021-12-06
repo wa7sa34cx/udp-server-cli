@@ -29,6 +29,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b26702f315f53b6071259e15dd9d64528213b44d61de1ec926eca7715d62203"
 
 [[package]]
+name = "async_once"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "58f8f7a882f8fffee0bdbb0580033b01613b50781e03c02713da0599ed90b595"
+
+[[package]]
 name = "atoi"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -229,12 +235,6 @@ dependencies = [
  "lock_api",
  "parking_lot",
 ]
-
-[[package]]
-name = "futures-io"
-version = "0.3.18"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e481354db6b5c353246ccf6a728b0c5511d752c08da7260546fc0933869daa11"
 
 [[package]]
 name = "futures-sink"
@@ -695,12 +695,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "slab"
-version = "0.4.5"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9def91fd1e018fe007022791f865d0ccc9b3a0d5001e01aabb8b40e46000afb5"
-
-[[package]]
 name = "smallvec"
 version = "1.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -938,22 +932,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "tokio-util"
-version = "0.6.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e99e1983e5d376cd8eb4b66604d2e99e79f5bd988c3055891dcd8c9e2604cc0"
-dependencies = [
- "bytes",
- "futures-core",
- "futures-io",
- "futures-sink",
- "log",
- "pin-project-lite",
- "slab",
- "tokio",
-]
-
-[[package]]
 name = "tracing"
 version = "0.1.29"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -996,15 +974,16 @@ name = "udp-server-cli"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "async_once",
  "bytes",
  "dotenv",
+ "lazy_static",
  "log",
  "pretty_env_logger",
  "sql-builder",
  "sqlx",
  "thiserror",
  "tokio",
- "tokio-util",
  "tracing",
 ]
 
