@@ -8,14 +8,8 @@ pub struct Item {
     pub text: String,
 }
 
-/// Creates new `Item`
-///
-/// # Example
-///
-/// ```
-/// let item = Item::new("hello");
-/// ```
 impl Item {
+    /// Creates new `Item`
     #[allow(unused)]
     pub fn new<S>(text: S) -> Self
     where
@@ -37,7 +31,7 @@ mod tests {
         let actual = Item::new("hello");
         let expected = Item {
             id: 0,
-            text: "hello".to_owned(),
+            text: "hello".to_string(),
         };
 
         assert_eq!(actual, expected);

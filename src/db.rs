@@ -53,3 +53,21 @@ fn get_env(env: &'static str) -> String {
     dotenv().ok();
     std::env::var(env).unwrap_or_else(|_| panic!("Cannot get the {} env variable", env))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_db() {
+        let db = Db::from_env().await;
+        
+        test_get_by_id(&db).await;
+    }
+
+    async fn test_get_by_id(db: &Db) {
+        assert_eq!(db.get_by_id(1).await.unwrap().text, "one".to_string());
+        assert_eq!(db.get_by_id(2).await.unwrap().text, "two".to_string());
+        assert_eq!(db.get_by_id(3).await.unwrap().text, "three".to_string());
+    }
+}
