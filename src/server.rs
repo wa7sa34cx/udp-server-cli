@@ -1,10 +1,20 @@
 //! Server module
 
-// use std::io;
+mod error;
+mod validation;
+
+use crate::db::Db;
+use async_once::AsyncOnce;
+use bytes::Bytes;
+use error::ServerError;
+use lazy_static::lazy_static;
 use std::net::SocketAddr;
-// use std::cell::Cell;
-use anyhow::Result;
 use tokio::net::UdpSocket;
+use validation::validate;
+
+lazy_static! {
+    static ref DB: AsyncOnce<Db> = AsyncOnce::new(async { Db::from_env().await });
+}
 
 /// Our UDP server
 #[derive(Debug)]
@@ -12,7 +22,7 @@ pub struct Server {
     socket: UdpSocket,
     buf: Vec<u8>,
     client: Client,
-    data: Option<String>,
+    res: Result<String, ServerError>,
 }
 
 // Remote client
@@ -38,9 +48,9 @@ impl Client {
 }
 
 impl Server {
-    pub async fn new(addr: &SocketAddr, max_datagram_size: usize) -> Result<Self> {
+    pub async fn new(addr: SocketAddr, max_datagram_size: usize) -> anyhow::Result<Self> {
         // Opens socket for listening
-        let socket = UdpSocket::bind(addr).await?;
+        let socket = UdpSocket::bind(&addr).await?;
 
         // Prints info to the console
         log::info!("Listening on: {}", &addr);
@@ -51,11 +61,12 @@ impl Server {
             socket,
             buf: vec![0; max_datagram_size],
             client,
-            data: String::new(),
+            res: Ok(String::new()),
         })
     }
 
-    pub async fn recv(&mut self) -> Result<()> {
+    /// Receives the request
+    pub async fn recv(&mut self) -> anyhow::Result<()> {
         let (len, addr) = self.socket.recv_from(&mut self.buf).await?;
         self.client = Client::from(len, addr);
         log::info!("Received {:?} bytes from {:?}", len, addr);
@@ -63,24 +74,43 @@ impl Server {
         Ok(())
     }
 
-    pub async fn process(&mut self) -> Result<()> {
-        // self.data = String::from_utf8(self.buf[..self.client.len].collect())?;
-        // self.data = self.buf[..self.client.len].to_string();
-        let data = match String::from_utf8(self.buf[..self.client.len].to_owned()) {
-            Ok(data) => data,
-            Err(_) => {
-                log::info!("Received invalid UTF-8");
-                String::new()
-            },
+    /// Processes the request
+    pub async fn process(&mut self) -> anyhow::Result<()> {
+        let id = match validate(&self.buf[..self.client.len]).await {
+            Ok(num) => num,
+            Err(e) => {
+                self.res = Err(ServerError::ReqError(e.to_string()));
+                return Ok(());
+            }
+        };
+
+        match DB.get().await.get_by_id(id).await {
+            Ok(item) => self.res = Ok(item.text),
+            Err(e) => {
+                self.res = Err(ServerError::DbError(e.to_string()));
+            }
         };
 
         Ok(())
     }
 
-    pub async fn send(&mut self) -> Result<()> {
-        let Client { len, addr } = self.client;
-        let amt = self.socket.send_to(&self.buf[..len], &addr).await?;
-        log::info!("Sended {}/{} bytes to {}", amt, len, addr);
+    /// Sends the responce
+    pub async fn send(&mut self) -> anyhow::Result<()> {
+        // In this case, we send the client a response or an error.
+        let buf = self.res.as_ref().map_or_else(
+            // converts response to bytes 
+            |s| Bytes::from(format!("{}\n", s)),
+            // converts error to bytes
+            |e| Bytes::from(format!("{}\n", e)),
+        );
+
+        let amt = self.socket.send_to(&buf[..], &self.client.addr).await?;
+        log::info!(
+            "Sended {}/{} bytes to {}",
+            amt,
+            buf.len(),
+            &self.client.addr
+        );
 
         Ok(())
     }
