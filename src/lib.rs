@@ -1,4 +1,6 @@
-//! lib.rs
+//! Library module
+//! 
+//! Creates and run server instance
 
 mod db;
 mod logging;

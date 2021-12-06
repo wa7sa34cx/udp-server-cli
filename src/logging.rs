@@ -1,3 +1,5 @@
+//! Logging module
+ 
 /// Enables logging through [pretty-env-logger].
 ///
 /// A logger will **only** print errors, warnings, and general information
