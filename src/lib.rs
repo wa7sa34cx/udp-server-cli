@@ -1,5 +1,6 @@
 //! lib.rs
 
+mod db;
 mod logging;
 mod server;
 
@@ -10,7 +11,8 @@ use std::net::SocketAddr;
 
 // RFC 791
 // https://tools.ietf.org/html/rfc791
-const MAX_DATAGRAM_SIZE: usize = 508;
+// const MAX_DATAGRAM_SIZE: usize = 508;
+const MAX_DATAGRAM_SIZE: usize = 1024;
 
 pub async fn run() -> anyhow::Result<()> {
     // Enables logging
@@ -23,9 +25,9 @@ pub async fn run() -> anyhow::Result<()> {
         .parse()?;
 
     // Creates new server
-    let mut server = Server::new(&addr, MAX_DATAGRAM_SIZE).await?;
+    let mut server = Server::new(addr, MAX_DATAGRAM_SIZE).await?;
 
-    // Server loop
+    // Starts server loop
     loop {
         server.recv().await?;
         server.process().await?;
