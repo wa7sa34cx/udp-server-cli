@@ -8,7 +8,7 @@ pub mod models;
 use anyhow::Result;
 use dotenv::dotenv;
 use models::*;
-use sql_builder::{quote, SqlBuilder};
+use sql_builder::SqlBuilder;
 use sqlx::sqlite::SqlitePool;
 
 type Pool = SqlitePool;
@@ -35,15 +35,15 @@ impl Db {
     }
 
     /// Get item by id
-    pub async fn get_by_id(&self, id: i64) -> Result<Vec<Item>> {
+    pub async fn get_by_id(&self, id: i64) -> Result<Item> {
         let sql = SqlBuilder::select_from("items")
-            .and_where_eq("chat_id", chat_id)
+            .and_where_eq("id", id)
             .order_asc("id")
             .sql()?;
 
-        let items: Vec<Item> = sqlx::query_as(&sql).fetch_all(&self.pool).await?;
+        let item: Item = sqlx::query_as(&sql).fetch_one(&self.pool).await?;
 
-        Ok(items)
+        Ok(item)
     }
 }
 
