@@ -94,7 +94,7 @@ impl Server {
         Ok(())
     }
 
-    /// Sends the responce
+    /// Sends the response
     pub async fn send(&mut self) -> anyhow::Result<()> {
         // In this case, we send the client a response or an error.
         let buf = self.res.as_ref().map_or_else(
